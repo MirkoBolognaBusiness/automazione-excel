@@ -42,3 +42,4 @@ jobs:
         with:
           name: exported-excel
           path: downloaded_excel.xlsx
+          retention-days: 7
