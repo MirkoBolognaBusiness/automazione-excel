@@ -2,6 +2,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 import time
+import shutil
+import os
 
 try:
     print("🚀 Avvio dello script...")
@@ -47,6 +49,25 @@ try:
 
     print("✅ Download avviato!")
     time.sleep(5)  # Aspettiamo il download
+
+    # Verifica dove viene salvato il file
+    download_folder = "/home/runner/Downloads"  # Cartella predefinita di GitHub Actions
+    files = os.listdir(download_folder)
+    print("📂 File nella cartella Download:", files)
+
+    # Trova il file Excel scaricato
+    excel_file = None
+    for file in files:
+        if file.endswith(".xlsx"):
+            excel_file = file
+            break
+
+    if excel_file:
+        full_path = os.path.join(download_folder, excel_file)
+        shutil.move(full_path, "downloaded_excel.xlsx")
+        print("✅ File Excel spostato correttamente!")
+    else:
+        print("❌ Nessun file Excel trovato!")
 
     # Chiudiamo il browser
     driver.quit()
