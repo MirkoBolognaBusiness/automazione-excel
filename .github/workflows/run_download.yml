@@ -3,7 +3,7 @@ name: Automazione Download Excel
 on:
   schedule:
     - cron: '0 6 * * *'  # Esegue lo script ogni giorno alle 6:00 UTC (7:00 in Italia)
-  workflow_dispatch:  # Permette di eseguirlo manualmente
+  workflow_dispatch:  # Permette di avviarlo manualmente
 
 jobs:
   run_script:
@@ -21,8 +21,14 @@ jobs:
         run: |
           pip install selenium
           sudo apt-get update
-          sudo apt-get install -y chromium-chromedriver
-          echo 'export PATH=$PATH:/usr/lib/chromium-browser/' >> $GITHUB_ENV
+          sudo apt-get install -y wget unzip
+          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo dpkg -i google-chrome-stable_current_amd64.deb || sudo apt-get install -f -y
+          wget https://chromedriver.storage.googleapis.com/$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip
+          unzip chromedriver_linux64.zip
+          sudo mv chromedriver /usr/local/bin/
+          sudo chmod +x /usr/local/bin/chromedriver
+          echo 'export PATH=$PATH:/usr/local/bin/' >> $GITHUB_ENV
 
       - name: Run script
         run: python download_excel.py
