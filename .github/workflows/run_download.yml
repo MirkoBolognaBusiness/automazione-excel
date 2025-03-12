@@ -36,6 +36,9 @@ jobs:
           python download_excel.py 2>&1 | tee error_log.txt
         continue-on-error: true
 
-      - name: Print error log
-        if: failure()
-        run: cat error_log.txt
+      - name: Upload file Excel come Artifact
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: exported-excel
+          path: downloaded_excel.xlsx
