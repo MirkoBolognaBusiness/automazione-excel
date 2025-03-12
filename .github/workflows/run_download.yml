@@ -36,9 +36,18 @@ jobs:
           python download_excel.py 2>&1 | tee error_log.txt
         continue-on-error: true
 
+      - name: Verifica esistenza del file
+        run: |
+          if [ -f "downloaded_excel.xlsx" ]; then
+            echo "✅ File Excel trovato!"
+          else
+            echo "❌ File Excel non trovato!"
+            exit 1
+          fi
+
       - name: Upload file Excel come Artifact
-        if: always()
-        uses: actions/upload-artifact@v3
+        if: success()
+        uses: actions/upload-artifact@v2
         with:
           name: exported-excel
           path: downloaded_excel.xlsx
