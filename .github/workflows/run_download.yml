@@ -1,0 +1,28 @@
+name: Automazione Download Excel
+
+on:
+  schedule:
+    - cron: '0 6 * * *'  # Esegue lo script ogni giorno alle 6:00 UTC (7:00 in Italia)
+  workflow_dispatch:  # Permette di eseguirlo manualmente
+
+jobs:
+  run_script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install selenium
+          sudo apt-get update
+          sudo apt-get install -y chromium-chromedriver
+          echo 'export PATH=$PATH:/usr/lib/chromium-browser/' >> $GITHUB_ENV
+
+      - name: Run script
+        run: python download_excel.py
